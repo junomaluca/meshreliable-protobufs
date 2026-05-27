@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package meshtastic;
+
+option csharp_namespace = "Meshtastic.Protobufs";
+option go_package = "github.com/meshtastic/go/generated";
+option java_outer_classname = "GroupMessageProtos";
+option java_package = "org.meshtastic.proto";
+option swift_prefix = "";
+
+/*
+ * Acknowledged Group Messaging Protocol
+ *
+ * Group messages combine the broadcast nature of channels with the delivery
+ * accountability of direct messages. Every group member must acknowledge receipt,
+ * with full visibility into delivery status.
+ */
+
+/*
+ * Types of group control messages
+ */
+enum GroupMessageType {
+  /* A regular group text message */
+  GROUP_TEXT = 0;
+
+  /* Member join announcement */
+  GROUP_JOIN = 1;
+
+  /* Member leave announcement */
+  GROUP_LEAVE = 2;
+
+  /* ACK from a group member for a specific message */
+  GROUP_ACK = 3;
+
+  /* Sender signals all members have acknowledged */
+  GROUP_ALL_ACKED = 4;
+
+  /* Request for current group roster */
+  GROUP_ROSTER_REQUEST = 5;
+
+  /* Response with current group roster */
+  GROUP_ROSTER_RESPONSE = 6;
+}
+
+/*
+ * A group message packet. Sent on the group's channel with portnum GROUP_MESSAGE_APP.
+ * The message includes a recipient manifest so the sender can track per-member ACKs.
+ */
+message GroupMessage {
+  /* Type of this group message */
+  GroupMessageType type = 1;
+
+  /* Unique message ID (set by sender, used for ACK correlation) */
+  uint32 message_id = 2;
+
+  /* Group ID — derived from channel hash, identifies which group this belongs to */
+  uint32 group_id = 3;
+
+  /* For GROUP_TEXT: the text payload */
+  string text = 4;
+
+  /* For GROUP_TEXT: list of node IDs that should ACK (recipient manifest) */
+  repeated uint32 members = 5;
+
+  /* For GROUP_ACK: the message_id being acknowledged */
+  uint32 ack_message_id = 6;
+
+  /* For GROUP_JOIN/GROUP_LEAVE: the node ID of the joining/leaving member */
+  uint32 member_node_id = 7;
+
+  /* For GROUP_ROSTER_RESPONSE: full list of known member node IDs */
+  repeated uint32 roster = 8;
+
+  /* Timestamp (seconds since epoch) when the message was originally sent */
+  uint32 send_time = 9;
+
+  /* Rebroadcast count — how many times this message has been relayed by swarm */
+  uint32 rebroadcast_count = 10;
+}

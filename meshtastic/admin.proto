@@ -172,6 +172,11 @@ message AdminMessage {
      * Persistent DM retry module config
      */
     RELIABLEMESSAGE_CONFIG = 16;
+
+    /*
+     * Acknowledged group messaging module config
+     */
+    GROUPMESSAGE_CONFIG = 17;
   }
 
   enum BackupLocation {

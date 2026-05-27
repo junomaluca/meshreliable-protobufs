@@ -279,6 +279,13 @@ enum PortNum {
   ATAK_FORWARDER = 257;
 
   /*
+   * Acknowledged Group Messaging protocol.
+   * Payload is a GroupMessage protobuf.
+   * ENCODING: Protobuf
+   */
+  GROUP_MESSAGE_APP = 258;
+
+  /*
    * Currently we limit port nums to no higher than this value
    */
   MAX = 511;

@@ -945,6 +945,11 @@ message ModuleConfig {
      * Persistent DM retry configuration
      */
     ReliableMessageConfig reliable_message = 17;
+
+    /*
+     * Acknowledged group messaging configuration
+     */
+    GroupMessageConfig group_message = 18;
   }
 
   /*
@@ -985,6 +990,41 @@ message ModuleConfig {
      * Range: 5–50.
      */
     uint32 battery_throttle_threshold = 5;
+  }
+
+  /*
+   * Acknowledged Group Messaging configuration.
+   * Groups provide broadcast messaging with per-member delivery tracking.
+   */
+  message GroupMessageConfig {
+    /*
+     * Enable acknowledged group messaging.
+     */
+    bool enabled = 1;
+
+    /*
+     * Maximum relay duration in hours (default: 24).
+     * Group messages are rebroadcast by members until this time elapses
+     * or the sender sends an ALL_ACKED signal. Range: 1–72.
+     */
+    uint32 max_relay_duration_hours = 2;
+
+    /*
+     * Enable MQTT bridging for group messages (default: true).
+     */
+    bool enable_mqtt_bridge = 3;
+
+    /*
+     * Maximum number of members per group (default: 32). Range: 2–64.
+     */
+    uint32 max_members = 4;
+
+    /*
+     * Delay in milliseconds before sending ACK aggregation (default: 5000).
+     * Small delay to avoid ACK storms when many members respond simultaneously.
+     * Range: 1000–30000.
+     */
+    uint32 ack_aggregation_delay_ms = 5;
   }
 
   message TAKConfig {
