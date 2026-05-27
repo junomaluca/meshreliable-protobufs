@@ -940,11 +940,53 @@ message ModuleConfig {
      * TAK team/role configuration for TAK_TRACKER
      */
     TAKConfig tak = 16;
+
+    /*
+     * Persistent DM retry configuration
+     */
+    ReliableMessageConfig reliable_message = 17;
   }
 
   /*
    * TAK team/role configuration
    */
+  /*
+   * Persistent DM retry configuration — dramatically increases retry attempts
+   * for direct messages to ensure eventual delivery over unreliable mesh links.
+   */
+  message ReliableMessageConfig {
+    /*
+     * Enable persistent DM retries (default: true).
+     * When enabled, DMs retry with exponential backoff for the full retry window.
+     */
+    bool enabled = 1;
+
+    /*
+     * Total retry window in seconds (default: 3600 = 1 hour).
+     * DMs will keep retrying within this window. Range: 60–86400.
+     */
+    uint32 retry_window_seconds = 2;
+
+    /*
+     * Initial retry interval in milliseconds (default: 15000 = 15 seconds).
+     * The first retry happens after this delay. Range: 5000–60000.
+     */
+    uint32 initial_retry_interval_ms = 3;
+
+    /*
+     * Maximum retry interval in milliseconds (default: 300000 = 5 minutes).
+     * Exponential backoff caps at this value. Range: 30000–600000.
+     */
+    uint32 max_retry_interval_ms = 4;
+
+    /*
+     * Battery percentage threshold for throttling retries (default: 20).
+     * Below this level, retry intervals double. Below half this value, retries pause.
+     * Range: 5–50.
+     */
+    uint32 battery_throttle_threshold = 5;
+  }
+
   message TAKConfig {
     /*
      * Team color.
