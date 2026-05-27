@@ -286,6 +286,13 @@ enum PortNum {
   GROUP_MESSAGE_APP = 258;
 
   /*
+   * Compressed media transfer protocol.
+   * Used for chunked transfer of voice memos and images over the mesh.
+   * ENCODING: Protobuf
+   */
+  MEDIA_TRANSFER_APP = 259;
+
+  /*
    * Currently we limit port nums to no higher than this value
    */
   MAX = 511;

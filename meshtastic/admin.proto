@@ -177,6 +177,11 @@ message AdminMessage {
      * Acknowledged group messaging module config
      */
     GROUPMESSAGE_CONFIG = 17;
+
+    /*
+     * Compressed media transfer module config
+     */
+    MEDIATRANSFER_CONFIG = 18;
   }
 
   enum BackupLocation {

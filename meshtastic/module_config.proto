@@ -950,6 +950,11 @@ message ModuleConfig {
      * Acknowledged group messaging configuration
      */
     GroupMessageConfig group_message = 18;
+
+    /*
+     * Compressed media transfer configuration
+     */
+    MediaTransferConfig media_transfer = 19;
   }
 
   /*
@@ -1025,6 +1030,45 @@ message ModuleConfig {
      * Range: 1000–30000.
      */
     uint32 ack_aggregation_delay_ms = 5;
+  }
+
+  /*
+   * Compressed Media Transfer configuration.
+   * Enables chunked transfer of compressed voice memos and images over the mesh.
+   */
+  message MediaTransferConfig {
+    /*
+     * Enable media transfer support.
+     */
+    bool enabled = 1;
+
+    /*
+     * Maximum chunk size in bytes (default: 200). Range: 100–237.
+     * Must fit within Meshtastic's MTU.
+     */
+    uint32 chunk_size_bytes = 2;
+
+    /*
+     * Maximum transfer time in minutes (default: 30). Range: 5–120.
+     * Transfers exceeding this are cancelled.
+     */
+    uint32 max_transfer_time_minutes = 3;
+
+    /*
+     * Maximum voice memo duration in seconds (default: 60). Range: 10–60.
+     */
+    uint32 voice_max_duration_seconds = 4;
+
+    /*
+     * Whether media transfers yield to text messages (default: true).
+     * When enabled, text messages are prioritized over media chunks.
+     */
+    bool yield_to_text = 5;
+
+    /*
+     * Prefer 2.4 GHz band for media transfers when available (default: true).
+     */
+    bool prefer_24ghz = 6;
   }
 
   message TAKConfig {

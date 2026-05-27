@@ -157,6 +157,11 @@ message LocalModuleConfig {
   ModuleConfig.GroupMessageConfig group_message = 19;
 
   /*
+   * Compressed Media Transfer Config
+   */
+  ModuleConfig.MediaTransferConfig media_transfer = 20;
+
+  /*
    * A version integer used to invalidate old save files when we make
    * incompatible changes This integer is set at build time and is private to
    * NodeDB.cpp in the device code.

@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package meshtastic;
+
+option csharp_namespace = "Meshtastic.Protobufs";
+option go_package = "github.com/meshtastic/go/generated";
+option java_outer_classname = "MediaTransferProtos";
+option java_package = "com.geeksville.mesh";
+option swift_prefix = "";
+
+/*
+ * Types of media transfer control messages.
+ */
+enum MediaTransferType {
+  /* A data chunk of the media transfer */
+  MEDIA_CHUNK = 0;
+  /* Transfer initiation — metadata about the incoming transfer */
+  MEDIA_START = 1;
+  /* Transfer complete signal from sender */
+  MEDIA_COMPLETE = 2;
+  /* Receiver requests retransmission of specific missing chunks */
+  MEDIA_NACK = 3;
+  /* Receiver confirms full transfer received and verified */
+  MEDIA_ACK_COMPLETE = 4;
+  /* Sender or receiver cancels the transfer */
+  MEDIA_CANCEL = 5;
+}
+
+/*
+ * Type of media content being transferred.
+ */
+enum MediaContentType {
+  /* Codec2 encoded voice memo */
+  VOICE_MEMO = 0;
+  /* JPEG compressed image (thumbnail) */
+  IMAGE_THUMBNAIL = 1;
+  /* JPEG compressed image (low-res) */
+  IMAGE_LOWRES = 2;
+  /* Generic binary data */
+  BINARY_DATA = 3;
+}
+
+/*
+ * A media transfer packet. Sent on portnum MEDIA_TRANSFER_APP.
+ * Handles chunked transfer of compressed media over the mesh.
+ */
+message MediaTransfer {
+  /* Type of this media transfer message */
+  MediaTransferType type = 1;
+
+  /* Unique transfer ID (identifies a single file transfer session) */
+  uint32 transfer_id = 2;
+
+  /* For MEDIA_CHUNK: which chunk this is (0-indexed) */
+  uint32 chunk_index = 3;
+
+  /* For MEDIA_START: total number of chunks in this transfer */
+  uint32 total_chunks = 4;
+
+  /* For MEDIA_START: total size in bytes of the compressed payload */
+  uint32 total_size = 5;
+
+  /* For MEDIA_CHUNK: the chunk data (up to 200 bytes) */
+  bytes chunk_data = 6;
+
+  /* For MEDIA_START: content type of the media */
+  MediaContentType content_type = 7;
+
+  /* For MEDIA_NACK: list of missing chunk indices to retransmit */
+  repeated uint32 missing_chunks = 8;
+
+  /* For MEDIA_START: CRC32 checksum of the complete compressed payload */
+  uint32 checksum = 9;
+
+  /* For MEDIA_START: optional MIME type string */
+  string mime_type = 10;
+
+  /* For MEDIA_START: duration in seconds (voice memos) */
+  uint32 duration_seconds = 11;
+
+  /* For MEDIA_START: image width (images) */
+  uint32 width = 12;
+
+  /* For MEDIA_START: image height (images) */
+  uint32 height = 13;
+}
